@@ -1,0 +1,13 @@
+# Dependency directories
+node_modules/
+package-lock.json
+
+# Environment variables
+.env
+
+# Database file
+database.sqlite
+
+# System files
+.DS_Store
+Thumbs.db

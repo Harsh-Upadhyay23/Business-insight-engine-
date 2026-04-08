@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Insight Engine | Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>InsightAI</h2>
+            </div>
+            <nav id="sidebar-nav">
+                <a href="#" class="active" data-target="dashboard-view" data-title="Business Dashboard">📊 Dashboard</a>
+                <a href="#" data-target="datasources-view" data-title="Data Sources">🌐 Data Sources</a>
+                <a href="#" data-target="orders-view" data-title="Recent Orders">📦 Orders</a>
+                <a href="#" data-target="products-view" data-title="Product Catalog">🏷️ Products</a>
+                <a href="#" data-target="customers-view" data-title="Customers">👥 Customers</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <h1 id="page-title">Business Dashboard</h1>
+                <div class="user-profile">
+                    <span>Admin</span>
+                    <div class="avatar">A</div>
+                </div>
+            </header>
+
+            <!-- Dashboard View -->
+            <div id="dashboard-view" class="view-section active">
+                <section class="kpi-grid">
+                    <div class="kpi-card">
+                        <h3>Total Revenue</h3>
+                        <p id="totalRevenue" class="kpi-value">$0.00</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h3>Total Orders</h3>
+                        <p id="totalOrders" class="kpi-value">0</p>
+                    </div>
+                    <div class="kpi-card ai-trigger-card">
+                        <h3>AI Insight Engine</h3>
+                        <p>Analyze with Gemini AI</p>
+                        <button id="generateInsightsBtn" class="primary-btn">Generate AI Insights</button>
+                    </div>
+                </section>
+
+                <section id="insightsPanel" class="insights-panel hidden">
+                    <div class="insights-header">
+                        <h2>🧠 AI Business Insights</h2>
+                        <div>
+                            <span id="insightSource" class="insight-badge"></span>
+                            <button id="closeInsightsBtn" class="icon-btn">&times;</button>
+                        </div>
+                    </div>
+                    <div id="insightsContent" class="insights-content">
+                        <p class="loading-text">Analyzing business data...</p>
+                    </div>
+                </section>
+
+                <section class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Revenue Over Time</h3>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Orders by Category</h3>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </section>
+                
+                <section class="data-section">
+                    <h2>Top Selling Products</h2>
+                    <div class="table-responsive">
+                        <table id="topProductsTable">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Quantity Sold</th>
+                                    <th>Revenue Generated</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Data Sources View -->
+            <div id="datasources-view" class="view-section hidden">
+                <section class="source-cards-grid">
+                    <div class="source-card" data-source="books">
+                        <div class="source-icon">🛍️</div>
+                        <h3>Amazon</h3>
+                        <p class="source-url">amazon.in</p>
+                        <p class="source-desc">Scrape product listings including titles, prices, ratings, and categories from Amazon's catalog.</p>
+                        <span class="source-type-badge scraping">Web Scraping</span>
+                        <button class="primary-btn scrape-btn" data-source="books">Analyse Now</button>
+                    </div>
+                    <div class="source-card" data-source="fakestoreapi">
+                        <div class="source-icon">🛒</div>
+                        <h3>Flipkart</h3>
+                        <p class="source-url">flipkart.com</p>
+                        <p class="source-desc">Extract product data with categories, pricing, and customer ratings from Flipkart's marketplace.</p>
+                        <span class="source-type-badge api">Data Feed</span>
+                        <button class="primary-btn scrape-btn" data-source="fakestoreapi">Analyse Now</button>
+                    </div>
+                    <div class="source-card" data-source="dummyjson">
+                        <div class="source-icon">📦</div>
+                        <h3>Meesho</h3>
+                        <p class="source-url">meesho.com</p>
+                        <p class="source-desc">Fetch product inventory with stock levels, brands, reviews, and discount data from Meesho.</p>
+                        <span class="source-type-badge api">Data Feed</span>
+                        <button class="primary-btn scrape-btn" data-source="dummyjson">Analyse Now</button>
+                    </div>
+                </section>
+
+                <section id="scrapeStatus" class="scrape-status hidden">
+                    <div class="status-bar">
+                        <span id="scrapeStatusText">Scraping...</span>
+                        <span id="scrapeCount" class="scrape-count"></span>
+                    </div>
+                </section>
+
+                <section id="scrapedResultsSection" class="data-section hidden">
+                    <h2>Scraped Products</h2>
+                    <div class="table-responsive">
+                        <table id="scrapedProductsTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Category</th>
+                                    <th>Rating</th>
+                                    <th>Stock</th>
+                                    <th>Source</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Orders View -->
+            <div id="orders-view" class="view-section hidden">
+                <section class="data-section">
+                    <div class="table-responsive">
+                        <table id="ordersTableFull">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Total Price</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Products View -->
+            <div id="products-view" class="view-section hidden">
+                <section class="data-section">
+                    <div class="table-responsive">
+                        <table id="productsTableFull">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Customers View -->
+            <div id="customers-view" class="view-section hidden">
+                <section class="data-section">
+                    <div class="table-responsive">
+                        <table id="customersTableFull">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Total Orders</th>
+                                    <th>Total Spent</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
